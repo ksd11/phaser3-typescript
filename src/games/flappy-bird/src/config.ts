@@ -12,7 +12,8 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
   parent: 'game',
   scene: [BootScene, MainMenuScene, GameScene],
   input: {
-    keyboard: true
+    keyboard: true,
+    touch: true
   },
   physics: {
     default: 'arcade',
@@ -21,5 +22,9 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
     }
   },
   backgroundColor: '#98d687',
-  render: { pixelArt: true, antialias: false }
+  render: { pixelArt: true, antialias: false },
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  }
 };

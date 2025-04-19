@@ -29,20 +29,52 @@ export class MainMenuScene extends Phaser.Scene {
       this.titleBitmapText.width
     );
 
-    this.playBitmapText = this.add.bitmapText(0, 300, 'font', 'S: PLAY', 25);
+    this.playBitmapText = this.add.bitmapText(
+      0, 
+      300, 
+      'font', 
+      'S: PLAY / TAP TO START', 
+      20
+    );
 
     this.playBitmapText.x = this.getCenterXPositionOfBitmapText(
       this.playBitmapText.width
     );
+
+    this.input.on('pointerdown', () => {
+      this.startGame();
+    });
+    
+    this.detectMobileDevice();
   }
 
   update(): void {
     if (this.startKey.isDown) {
-      this.scene.start('GameScene');
+      this.startGame();
     }
+  }
+
+  private startGame(): void {
+    this.scene.start('GameScene');
   }
 
   private getCenterXPositionOfBitmapText(width: number): number {
     return this.sys.canvas.width / 2 - width / 2;
+  }
+  
+  private detectMobileDevice(): void {
+    const isPortrait = window.innerHeight > window.innerWidth;
+    
+    if (window.innerWidth < 500) {
+      const touchTip = this.add.bitmapText(
+        0,
+        400,
+        'font',
+        'TAP SCREEN TO JUMP',
+        16
+      );
+      
+      touchTip.x = this.getCenterXPositionOfBitmapText(touchTip.width);
+    }
   }
 }

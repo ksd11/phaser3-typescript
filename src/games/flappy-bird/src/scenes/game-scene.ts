@@ -7,6 +7,8 @@ export class GameScene extends Phaser.Scene {
   private background: Phaser.GameObjects.TileSprite;
   private scoreText: Phaser.GameObjects.BitmapText;
   private timer: Phaser.Time.TimerEvent;
+  private isPaused: boolean = false;
+  private pauseButton: Phaser.GameObjects.Image;
 
   constructor() {
     super({
@@ -16,6 +18,7 @@ export class GameScene extends Phaser.Scene {
 
   init(): void {
     this.registry.set('score', -1);
+    this.isPaused = false;
   }
 
   create(): void {
@@ -49,9 +52,18 @@ export class GameScene extends Phaser.Scene {
       callbackScope: this,
       loop: true
     });
+
+    this.addPauseButton();
+
+    window.addEventListener('resize', this.checkOrientation.bind(this));
+    this.checkOrientation();
+
+    this.createTouchArea();
   }
 
   update(): void {
+    if (this.isPaused) return;
+
     if (!this.bird.getDead()) {
       this.background.tilePositionX += 4;
       this.bird.update();
@@ -80,14 +92,11 @@ export class GameScene extends Phaser.Scene {
   }
 
   private addNewRowOfPipes(): void {
-    // update the score
     this.registry.values.score += 1;
     this.scoreText.setText(this.registry.values.score);
 
-    // randomly pick a number between 1 and 5
     let hole = Math.floor(Math.random() * 5) + 1;
 
-    // add 6 pipes with one big hole at position hole and hole + 1
     for (let i = 0; i < 10; i++) {
       if (i !== hole && i !== hole + 1 && i !== hole + 2) {
         if (i === hole - 1) {
@@ -102,7 +111,6 @@ export class GameScene extends Phaser.Scene {
   }
 
   private addPipe(x: number, y: number, frame: number): void {
-    // create a new pipe at the position x and y and add it to group
     this.pipes.add(
       new Pipe({
         scene: this,
@@ -112,5 +120,85 @@ export class GameScene extends Phaser.Scene {
         texture: 'pipe'
       })
     );
+  }
+
+  private addPauseButton(): void {
+    this.pauseButton = this.add.image(360, 30, 'pipe', 0)
+      .setScale(0.6)
+      .setAlpha(0.7)
+      .setInteractive()
+      .on('pointerdown', () => {
+        this.togglePause();
+      });
+    
+    this.pauseButton.setDepth(3);
+  }
+
+  private togglePause(): void {
+    this.isPaused = !this.isPaused;
+    
+    if (this.isPaused) {
+      this.physics.pause();
+      this.timer.paused = true;
+      
+      const pauseText = this.add.bitmapText(
+        0,
+        this.sys.canvas.height / 2,
+        'font',
+        'PAUSED - TAP TO RESUME',
+        20
+      ).setDepth(3);
+      
+      pauseText.x = this.sys.canvas.width / 2 - pauseText.width / 2;
+      pauseText.setName('pauseText');
+    } else {
+      this.physics.resume();
+      this.timer.paused = false;
+      
+      const pauseText = this.children.getByName('pauseText');
+      if (pauseText) pauseText.destroy();
+    }
+  }
+
+  private checkOrientation(): void {
+    if (window.innerWidth < 500 && window.innerWidth > window.innerHeight) {
+      if (!this.children.getByName('orientationText')) {
+        const orientText = this.add.bitmapText(
+          0,
+          this.sys.canvas.height / 2 - 50,
+          'font',
+          'PORTRAIT MODE\nRECOMMENDED',
+          20
+        ).setDepth(3)
+          .setName('orientationText');
+        
+        orientText.x = this.sys.canvas.width / 2 - orientText.width / 2;
+        
+        this.time.delayedCall(3000, () => {
+          if (orientText && orientText.active) {
+            orientText.destroy();
+          }
+        });
+      }
+    }
+  }
+
+  private createTouchArea(): void {
+    const touchArea = this.add.rectangle(
+      0, 
+      0, 
+      this.sys.canvas.width, 
+      this.sys.canvas.height,
+      0xffffff, 
+      0
+    ).setOrigin(0, 0);
+    
+    touchArea.setInteractive();
+    touchArea.on('pointerdown', () => {
+      if (this.isPaused) {
+        this.togglePause();
+        return;
+      }
+    });
   }
 }
