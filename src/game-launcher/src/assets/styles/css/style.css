@@ -1,0 +1,88 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #282c34;
+  color: #abb2bf;
+  font-family: Arial, sans-serif;
+}
+
+#game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.game-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.game-card {
+  background-color: #3a404d;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.game-card-image {
+  width: 100%;
+  height: 180px;
+  background-color: #4a5060;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e5e5e5;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.game-info {
+  padding: 15px;
+}
+
+.game-info h3 {
+  margin: 0 0 10px 0;
+  color: #e5e5e5;
+}
+
+.game-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #abb2bf;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #e5e5e5;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #3a404d;
+  color: #e5e5e5;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: none;
+}
+
+.back-button:hover {
+  background-color: #4a5060;
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="digitsensitive" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="assets/styles/css/style.css"
+      media="screen"
+    />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+      /* 添加内联样式解决可能的图片加载问题 */
+      .game-card-image {
+        width: 100%;
+        height: 180px;
+        background-color: #4a5060;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #e5e5e5;
+        font-size: 24px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game">
+      <h1 class="title">Phaser3 游戏合集</h1>
+      <button id="backButton" class="back-button">返回游戏列表</button>
+      <div id="gameContainer" class="game-list"></div>
+    </div>
+  </body>
+</html>
